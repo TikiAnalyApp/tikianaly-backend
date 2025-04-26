@@ -1,0 +1,35 @@
+service: disanalys-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  timeout: 30
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PASS: ${env:DB_PASS}
+    JWT_SECRET: ${env:JWT_SECRET}
+    SPORTMONKS_API_KEY: ${env:SPORTMONKS_API_KEY}
+
+
+functions:
+  api:
+    handler: src/handler.main
+    events:
+      - http:
+          path: /
+          method: any
+      - http:
+          path: /{proxy+}
+          method: any
+
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+    - .github/**
+    - envexample
+plugins:
+  - serverless-dotenv-plugin
